@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>정처기 실기 카드</title>
+<meta name="description" content="정보처리기사 실기 약점 카드 — 제한 없이 반복, 카드마다 5회까지 회독 체크" />
+<meta name="theme-color" content="#eef1f4" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#12161c" media="(prefers-color-scheme: dark)" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="정처기 카드" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap" />
+<link rel="stylesheet" href="styles.css?v=20261013a" />
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>정처기 실기 카드</h1>
+    <span class="today" id="today"></span>
+  </header>
+
+  <section class="counts" id="counts" aria-label="회독 수별 카드 수"></section>
+  <div class="bar" aria-hidden="true"><i id="bar-fill"></i></div>
+  <p class="sum" id="sum"></p>
+
+  <div class="tabs" role="group" aria-label="보기">
+    <button type="button" id="t-study" aria-pressed="true">학습</button>
+    <button type="button" id="t-list" aria-pressed="false">전체 목록</button>
+  </div>
+  <div class="kinds" id="kinds" role="group" aria-label="카드 종류"></div>
+  <div class="chips" id="chips" role="group" aria-label="단원"></div>
+  <div class="opts">
+    <label><input type="checkbox" id="o-done" /> 5회 채운 카드도 보기</label>
+    <label><input type="checkbox" id="o-shuffle" /> 섞기</label>
+  </div>
+
+  <div class="status" id="status">카드를 불러오는 중…</div>
+  <main id="study"></main>
+  <div id="list" class="list" hidden></div>
+
+  <details class="tools">
+    <summary>기록 백업 · 초기화</summary>
+    <p>회독 기록은 이 기기의 브라우저에만 저장됩니다. 기기를 바꾸거나 사파리 데이터를 지우기 전에 백업 코드를 복사해 두세요.</p>
+    <div class="tool-row">
+      <button type="button" id="b-export">백업 코드 복사</button>
+      <button type="button" id="b-import">백업 코드 붙여넣기</button>
+      <button type="button" id="b-reset" class="danger">전부 0회로</button>
+    </div>
+    <textarea id="io" rows="3" placeholder="백업 코드를 여기에 붙여넣고 [백업 코드 붙여넣기]를 누르세요" hidden></textarea>
+    <p class="tool-msg" id="tool-msg" role="status"></p>
+  </details>
+
+  <p class="legend">답을 말하거나 써 본 뒤 카드를 눌러 뒤집고, 끝까지 확인했으면 <b>봤음 +1</b>. 하루 제한 없이 계속 넘길 수 있고, 카드마다 5회를 채우면 완료입니다. 회독 점을 직접 눌러 숫자를 고칠 수도 있습니다. 순서는 적게 본 카드 → 예전 앱에서 틀렸던 카드 순. 키보드: Space 뒤집기 · → 봤음 +1 · ← 건너뛰기</p>
+</div>
+
+<div class="a2hs" id="a2hs" hidden role="dialog" aria-labelledby="a2hs-t">
+  <div class="a2hs-box">
+    <b id="a2hs-t">홈 화면에 추가하기</b>
+    <p id="a2hs-msg"></p>
+    <button type="button" id="a2hs-ok">확인</button>
+  </div>
+</div>
+
+<script src="app.js?v=20261013a"></script>
+</body>
+</html>
