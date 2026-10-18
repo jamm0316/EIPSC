@@ -1,6 +1,14 @@
-# EIPSC — 정처기 실기 카드 (PWA)
+# EIPSC — 정처기 실기 카드 · 지도 · 약점 요약 (PWA)
 
-정보처리기사 실기 약점 카드를 폰에서 바로 여는 정적 PWA. 프레임워크·빌드 없이 `index.html`, `styles.css`, `app.js`, `data/cards.json`만으로 동작한다.
+정보처리기사 실기 약점 카드, 시각 지도, 약점 핵심요약을 폰에서 한 앱으로 여는 정적 PWA. 프레임워크·빌드 없이 동작한다. 위쪽 탭으로 화면을 오간다.
+
+| 화면 | 파일 | 데이터 |
+| --- | --- | --- |
+| 카드 | `index.html` · `app.js` | `data/cards.json` |
+| 지도 | `map.html` (스크립트 포함) | 파일 안 배열(WORLD·SW·DB·NET·OS·PG) |
+| 약점 요약 | `weak.html` · `weak.js` | `data/weak.md` |
+
+지도와 약점 요약은 서로 링크된다: 지도 단원 제목 옆 [약점 요약 ›], 요약 단원 제목 옆 [지도에서 보기 ›].
 
 배포: https://jamm0316.github.io/EIPSC/
 
@@ -25,6 +33,9 @@ python3 tools/build_cards.py <export-dir>
 ```
 
 `data/cards.json`이 다시 만들어진다. 커밋·푸시하면 Pages에 반영된다. 회독 기록은 카드 id 기준이라 유지된다.
+
+## 약점 요약 갱신
+`data/weak.md`를 고친다. `## <id> 제목`의 첫 단어(net·sec·db·sw·os·pg·gap)가 섹션 id이자 지도 앵커다. `###` 소단원은 접고 펼칠 수 있다. 지원 문법: 제목·문단·목록(4칸 들여쓰기 하위)·표·코드 블록·`**굵게**`·`` `코드` ``. 원본 문서: Claude 문서 「정처기 실기 약점 단원 정리 (핵심요약 발췌)」.
 
 ## 정적 파일을 바꿀 때
 `sw.js`의 `CACHE_VERSION`과 `index.html`·`sw.js`의 `?v=` 값을 함께 올린다.

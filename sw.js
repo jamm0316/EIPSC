@@ -1,8 +1,9 @@
-const CACHE_VERSION = 'eipsc-v1';
+const CACHE_VERSION = 'eipsc-v2';
 const PRECACHE = [
   './', 'index.html', 'manifest.json',
-  'styles.css?v=20261013a', 'app.js?v=20261013a',
-  'data/cards.json',
+  'styles.css?v=20261019a', 'app.js?v=20261019a',
+  'map.html', 'weak.html', 'weak.js?v=20261019a',
+  'data/cards.json', 'data/weak.md',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png',
 ];
 
@@ -26,7 +27,7 @@ const cacheFirst = (request) =>
     }))
   );
 
-// 카드 데이터: 네트워크 우선(새 카드 반영), 오프라인이면 캐시
+// 카드·요약 데이터: 네트워크 우선(새 내용 반영), 오프라인이면 캐시
 const networkFirst = (request) =>
   caches.open(CACHE_VERSION).then((cache) =>
     fetch(request).then((res) => {
@@ -41,10 +42,10 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
 
   if (request.mode === 'navigate') {
-    event.respondWith(fetch(request).catch(() => caches.match('./')));
+    event.respondWith(fetch(request).catch(() => caches.match(request, { ignoreSearch: true }).then((r) => r || caches.match('./'))));
     return;
   }
-  if (url.origin === self.location.origin && url.pathname.endsWith('/data/cards.json')) {
+  if (url.origin === self.location.origin && (url.pathname.endsWith('/data/cards.json') || url.pathname.endsWith('/data/weak.md'))) {
     event.respondWith(networkFirst(request));
     return;
   }

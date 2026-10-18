@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>정처기 실기 지도</title>
+<meta name="theme-color" content="#eef1f4" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#12161c" media="(prefers-color-scheme: dark)" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="정처기 카드" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: 6개 대단원이 각자 다른 "모양"을 가진 지도. 공장 라인 / 계단 / 지하철 노선 / 성벽 동심원 / 생애 순환 / 공구함 */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --ink:#1b2430; --muted:#5d6878; --line:#cfd6df;
+  --sw:#2f5bd3; --db:#0f8073; --net:#c27a06; --sec:#c2384b; --os:#7348c9; --pg:#4f6f17;
+  --star:#f2c200; --star-ink:#3a2c00; --cover:#d9dee5; --cover2:#c9d0d9;
+  --display:"Black Han Sans","IBM Plex Sans KR",system-ui,sans-serif;
+  --body:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12161c; --surface:#1b212a; --ink:#e7ebf0; --muted:#9aa5b4; --line:#2f3844;
+  --sw:#7d9bff; --db:#3fc2b1; --net:#f0a93a; --sec:#ff7a8c; --os:#b294ff; --pg:#a3c95a;
+  --star:#f2c200; --star-ink:#2a2000; --cover:#2a323d; --cover2:#333c48; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12161c; --surface:#1b212a; --ink:#e7ebf0; --muted:#9aa5b4; --line:#2f3844;
+  --sw:#7d9bff; --db:#3fc2b1; --net:#f0a93a; --sec:#ff7a8c; --os:#b294ff; --pg:#a3c95a;
+  --star:#f2c200; --star-ink:#2a2000; --cover:#2a323d; --cover2:#333c48; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:16px;padding-block:20px 60px}
+h1,h2{font-family:var(--display);font-weight:400;letter-spacing:.01em;text-wrap:balance;margin:0}
+h1{font-size:clamp(28px,5vw,40px)}
+.sub{color:var(--muted);margin:.3em 0 0}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;margin-block:14px 6px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;border-bottom:1px solid var(--line)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface)}
+.seg button{font:inherit;font-size:13px;border:0;background:none;color:var(--muted);padding:6px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg button:focus-visible,.tile:focus-visible,.c:focus-visible{outline:2px solid var(--sw);outline-offset:2px}
+.legend{font-size:12px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+.star{display:inline-block;background:var(--star);color:var(--star-ink);font-size:11px;font-weight:700;border-radius:4px;padding:0 5px;line-height:18px;vertical-align:2px;margin-left:4px}
+.n{font-family:var(--mono);font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* 세계지도 */
+.world{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}
+.tile{display:flex;gap:12px;align-items:flex-start;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;border-top:5px solid var(--c)}
+.tile svg{flex:none;width:40px;height:40px;color:var(--c)}
+.tile b{font-family:var(--display);font-weight:400;font-size:20px;display:block;color:var(--c)}
+.tile span{font-size:13px;color:var(--muted);display:block}
+.meter{height:5px;background:var(--line);border-radius:3px;margin-top:6px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--c)}
+@media (max-width:720px){.world{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:420px){.world{grid-template-columns:1fr}}
+
+section{margin-top:44px;scroll-margin-top:70px}
+.head{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.head svg{width:34px;height:34px;color:var(--c)}
+.head h2{font-size:28px;color:var(--c)}
+.story{font-size:15px;margin:.4em 0 14px;color:var(--ink)}
+.story em{font-style:normal;background:linear-gradient(transparent 60%,color-mix(in srgb,var(--c) 25%,transparent) 60%)}
+.nt{font-weight:700;font-size:15px}
+.k{font-size:13px;color:var(--muted);margin-top:4px;overflow-wrap:anywhere}
+.why{font-size:12px;color:var(--c);font-weight:500}
+
+/* 가리기 */
+.c{cursor:default;border-radius:4px;transition:background .15s}
+body.m1 .k.c:not(.open), body.m2 .c:not(.open){color:transparent !important;cursor:pointer;background:repeating-linear-gradient(-45deg,var(--cover) 0 6px,var(--cover2) 6px 12px);user-select:none}
+body.m1 .k.c:not(.open) *, body.m2 .c:not(.open) *{visibility:hidden}
+
+/* SW: 공장 라인 */
+.belt{overflow-x:auto;padding-bottom:6px}
+.belt ol{list-style:none;margin:0;padding:0 0 22px;display:flex;gap:0;min-width:max-content;position:relative}
+.belt ol::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:12px;border-radius:6px;background:repeating-linear-gradient(90deg,var(--sw) 0 14px,transparent 14px 22px);opacity:.35}
+.station{width:220px;flex:none;display:flex}
+.station .box{background:var(--surface);border:1px solid var(--line);border-bottom:4px solid var(--sw);border-radius:10px;padding:10px;width:100%}
+.station .no{font-family:var(--mono);font-size:11px;color:var(--sw)}
+.station .grp{font-size:11px;color:var(--muted)}
+.arrow{flex:none;width:58px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 4px}
+.arrow::before{content:"→";font-size:20px;color:var(--sw);line-height:1}
+.arrow .why{font-size:10.5px;line-height:1.3}
+.design{outline:2px dashed color-mix(in srgb,var(--sw) 45%,transparent);outline-offset:3px;border-radius:12px}
+
+/* DB: 계단 */
+.stairs{display:flex;flex-direction:column;gap:0}
+.step{margin-left:calc(var(--i) * 5.5%);max-width:calc(100% - var(--i) * 5.5%);background:var(--surface);border:1px solid var(--line);border-left:8px solid var(--db);border-radius:4px 10px 10px 4px;padding:10px 12px}
+.riser{margin-left:calc(var(--i) * 5.5% + 12px);padding:4px 0 4px 14px;border-left:2px dotted var(--db)}
+.step .lv{font-family:var(--display);font-size:16px;color:var(--db);margin-right:6px}
+
+/* 네트워크: 지하철 노선 */
+.metro{position:relative;padding-left:34px}
+.metro::before{content:"";position:absolute;left:11px;top:14px;bottom:14px;width:8px;border-radius:4px;background:var(--net)}
+.stop{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.stop::before{content:"";position:absolute;left:-30px;top:12px;width:16px;height:16px;border-radius:50%;background:var(--surface);border:4px solid var(--net)}
+.hop{padding:6px 0 6px 6px}
+.branch{margin-top:12px;margin-left:34px;border:1px dashed var(--net);border-radius:10px;padding:10px 12px;background:var(--surface)}
+
+/* 보안: 성 동심원 */
+.attack{border:2px dashed var(--sec);border-radius:22px;padding:12px;position:relative}
+.ring{border-radius:18px;padding:12px;margin-top:10px}
+.wall{border:8px double var(--sec);background:color-mix(in srgb,var(--sec) 5%,var(--surface))}
+.gate{border:3px solid var(--sec);background:color-mix(in srgb,var(--sec) 9%,var(--surface))}
+.vault{border:2px solid var(--sec);background:color-mix(in srgb,var(--sec) 14%,var(--surface))}
+.core{border-radius:50px;background:var(--sec);color:var(--surface);text-align:center;padding:12px}
+.core .k{color:var(--surface);opacity:.9}
+.rl{font-family:var(--display);font-size:15px;color:var(--sec)}
+.core .rl{color:var(--surface)}
+.read{font-size:12px;color:var(--muted);margin-top:8px}
+
+/* OS: 생애 순환 */
+.life{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;align-items:start}
+.life svg{width:100%;height:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.life .lst{display:flex;flex-direction:column;gap:8px}
+.life .it{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--os);border-radius:8px;padding:8px 12px}
+@media (max-width:720px){.life{grid-template-columns:1fr}}
+
+/* 프로그래밍: 공구함 */
+.tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.tool{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;border-top:10px solid var(--pg)}
+.tool ul{margin:6px 0 0;padding-left:18px;font-size:13px;color:var(--muted)}
+@media (max-width:720px){.tools{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:420px){.tools{grid-template-columns:1fr}}
+.foot{margin-top:40px;font-size:12px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<style>
+body{margin:0}
+.appnav{position:sticky;top:0;z-index:8;display:flex;gap:4px;justify-content:center;padding:8px 16px;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line);font-family:var(--body)}
+.appnav a{flex:1;max-width:160px;text-align:center;font-size:14px;font-weight:700;text-decoration:none;color:var(--muted);border-radius:999px;padding:7px 10px}
+.appnav a[aria-current="page"]{background:var(--ink);color:var(--bg)}
+.appnav a:focus-visible{outline:2px solid var(--sw);outline-offset:2px}
+.bar{top:52px !important}
+section{scroll-margin-top:120px !important}
+.toweak{margin-left:auto;font-size:12px;color:var(--c);text-decoration:none;white-space:nowrap}
+body{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+</style>
+</head>
+<body>
+<nav class="appnav" aria-label="화면">
+  <a href="./">카드</a><a href="map.html" aria-current="page">지도</a><a href="weak.html">약점 요약</a>
+</nav>
+<div class="wrap">
+  <h1>정처기 실기 지도</h1>
+  <p class="sub">대단원마다 모양이 다릅니다. 모양을 먼저 떠올리면 그 안의 칸이 따라 나옵니다.</p>
+
+  <div class="bar">
+    <div class="seg" role="group" aria-label="보기 방식">
+      <button type="button" id="m0" data-m="0" aria-pressed="true">전부 보기</button>
+      <button type="button" id="m1" data-m="1" aria-pressed="false">키워드 가리기</button>
+      <button type="button" id="m2" data-m="2" aria-pressed="false">백지</button>
+    </div>
+    <div class="legend"><span><span class="star">★</span> 현재 약점</span><span><span class="n">12</span> 기출 출제 수(2020-1~2025-3)</span><span>가린 칸은 눌러서 확인</span></div>
+  </div>
+
+  <nav class="world" id="world" aria-label="대단원 6개"></nav>
+
+  <!-- SW -->
+  <section id="sw" style="--c:var(--sw)">
+    <div class="head"><svg data-icon="factory"></svg><h2>SW공학 · 공장 라인</h2><span class="n">86</span><a class="toweak" href="weak.html#sw">약점 요약 ›</a></div>
+    <p class="story c">소프트웨어 하나가 <em>컨베이어를 타고</em> 정하기 → 설계 → 구현 → 테스트 → 통합 공정을 차례로 지난다. 점선 안 4칸은 모두 설계 공정이다.</p>
+    <div class="belt"><ol id="belt"></ol></div>
+  </section>
+
+  <!-- DB -->
+  <section id="db" style="--c:var(--db)">
+    <div class="head"><svg data-icon="stairs"></svg><h2>DB · 계단</h2><span class="n">73</span><a class="toweak" href="weak.html#db">약점 요약 ›</a></div>
+    <p class="story c">한 계단씩 내려갈 때마다 <em>앞 계단의 문제</em>가 다음 계단을 만든다. 표가 생기면 규칙이 필요하고, 규칙이 있어도 중복이 남으면 다듬는다.</p>
+    <div class="stairs" id="stairs"></div>
+  </section>
+
+  <!-- NET -->
+  <section id="net" style="--c:var(--net)">
+    <div class="head"><svg data-icon="pin"></svg><h2>네트워크 · 지하철 노선</h2><span class="n">36</span><a class="toweak" href="weak.html#net">약점 요약 ›</a></div>
+    <p class="story c">패킷 하나가 <em>출발역에서 종착역까지</em> 간다. 역 사이의 문장은 "왜 다음 역으로 가야 하나"이다.</p>
+    <div class="metro" id="metro"></div>
+    <div class="branch"><span class="nt c">지선 · 특수망</span> <span class="n">5</span><div class="k c">애드혹: 기지국 없이 노드끼리 · VPN: 공용망 위 사설 터널 (보안 성벽과 겹침)</div></div>
+  </section>
+
+  <!-- SEC -->
+  <section id="sec" style="--c:var(--sec)">
+    <div class="head"><svg data-icon="shield"></svg><h2>보안 · 성</h2><span class="n">39</span><a class="toweak" href="weak.html#sec">약점 요약 ›</a></div>
+    <p class="story c">성 한가운데 <em>지킬 보물</em>이 있고, 금고 → 성문 → 성벽이 겹겹이 감싼다. 공격자는 바깥 점선에서 들어오려 한다.</p>
+    <div class="attack">
+      <div class="rl c">바깥 · 공격자 <span class="star">★</span> <span class="n">16</span></div>
+      <div class="k c">가용성 공격 DoS/DDoS: <b>SYN Flooding</b>(3-way handshake를 반쯤 열어 두기)·Ping of Death·Smurf·Land / 엿보기·가로채기: 스니핑·ARP스푸핑·세션하이재킹 / 침투: SQL Injection·APT·워터링홀 / 악성코드: 웜·트로이목마·랜섬웨어·키로거·봇넷</div>
+      <div class="ring wall">
+        <div class="rl c">성벽 · 방어 <span class="star">★</span> <span class="n">6</span></div>
+        <div class="k c">방화벽 · IDS(탐지) · IPS(차단) · DLP · NAC / 보안 프로토콜: <b>SSH</b>(원격 접속) · SSL/TLS(웹) · IPSec(IP 계층) / VPN · 무선 WPA</div>
+        <div class="ring gate">
+          <div class="rl c">성문 · 누가 들어오나 <span class="star">★</span> <span class="n">8</span></div>
+          <div class="k c">AAA: 인증 → 인가 → 계정관리 · OTP · <b>OAuth = 권한 위임</b>, OIDC = 그 위의 인증 / 접근통제: <b>DAC</b> 신분·소유자 재량 · <b>MAC</b> 보안 등급·규칙 · <b>RBAC</b> 역할</div>
+          <div class="ring vault">
+            <div class="rl c">금고 · 비밀 만들기 <span class="n">6</span></div>
+            <div class="k c">대칭키: DES(56비트) → AES(128/192/256) · SEED · ARIA / 비대칭: RSA · ECC / 해시(단방향): SHA · MD5</div>
+            <div class="ring core">
+              <div class="rl c">보물 · 지킬 것 <span class="n">2</span></div>
+              <div class="k c">기밀성 · 무결성 · 가용성</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="read">외울 순서: 안에서 밖으로. 보물 → 금고 → 성문 → 성벽, 그리고 성벽 밖의 공격자.</p>
+  </section>
+
+  <!-- OS -->
+  <section id="os" style="--c:var(--os)">
+    <div class="head"><svg data-icon="cycle"></svg><h2>OS · 프로세스의 생애</h2><span class="n">15</span><a class="toweak" href="weak.html#os">약점 요약 ›</a></div>
+    <p class="story c">프로세스 하나가 <em>태어나서 일하고 쉬다가 끝난다</em>. 일하는 동안 CPU를 배정받고, 메모리를 쓰고, 다른 프로세스와 대화한다.</p>
+    <div class="life">
+      <svg viewBox="0 0 360 190" role="img" aria-label="프로세스 상태 전이도">
+        <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" style="fill:var(--os)"/></marker></defs>
+        <g style="fill:none;stroke:var(--os);stroke-width:2">
+          <line x1="80" y1="40" x2="128" y2="40" marker-end="url(#ah)"/>
+          <path d="M200,32 Q232,6 263,32" marker-end="url(#ah)"/>
+          <path d="M263,50 Q232,74 202,50" marker-end="url(#ah)"/>
+          <line x1="285" y1="56" x2="202" y2="133" marker-end="url(#ah)"/>
+          <line x1="165" y1="133" x2="165" y2="58" marker-end="url(#ah)"/>
+          <line x1="300" y1="56" x2="300" y2="133" marker-end="url(#ah)"/>
+        </g>
+        <g style="font:500 11px var(--mono);fill:var(--muted)" class="svgk">
+          <text x="232" y="14" text-anchor="middle">dispatch</text>
+          <text x="232" y="80" text-anchor="middle">timeout</text>
+          <text x="250" y="108" text-anchor="start">block</text>
+          <text x="159" y="100" text-anchor="end">wakeup</text>
+          <text x="306" y="100" text-anchor="start">exit</text>
+        </g>
+        <g style="font:700 13px var(--body)">
+          <rect x="10" y="25" width="70" height="30" rx="15" style="fill:var(--surface);stroke:var(--os);stroke-width:2"/><text x="45" y="45" text-anchor="middle" style="fill:var(--ink)">생성</text>
+          <rect x="130" y="25" width="70" height="30" rx="15" style="fill:var(--surface);stroke:var(--os);stroke-width:2"/><text x="165" y="45" text-anchor="middle" style="fill:var(--ink)">준비</text>
+          <rect x="265" y="25" width="70" height="30" rx="15" style="fill:var(--os)"/><text x="300" y="45" text-anchor="middle" style="fill:var(--surface)">실행</text>
+          <rect x="130" y="135" width="70" height="30" rx="15" style="fill:var(--surface);stroke:var(--os);stroke-width:2"/><text x="165" y="155" text-anchor="middle" style="fill:var(--ink)">대기</text>
+          <rect x="265" y="135" width="70" height="30" rx="15" style="fill:var(--surface);stroke:var(--os);stroke-width:2;stroke-dasharray:4 3"/><text x="300" y="155" text-anchor="middle" style="fill:var(--ink)">종료</text>
+        </g>
+      </svg>
+      <div class="lst" id="oslist"></div>
+    </div>
+  </section>
+
+  <!-- PG -->
+  <section id="pg" style="--c:var(--pg)">
+    <div class="head"><svg data-icon="toolbox"></svg><h2>프로그래밍 · 공구함</h2><span class="n">125</span><a class="toweak" href="weak.html#pg">약점 요약 ›</a></div>
+    <p class="story c">언어별로 나누지 않고 <em>원리별 공구 6개</em>로 나눈다. 코드 문제를 보면 어떤 공구를 꺼낼지부터 정한다.</p>
+    <div class="tools" id="tools"></div>
+  </section>
+
+  <p class="foot">원본: 노션 「지도 — 6대 단원 흐름」 · ★ = weakness DB 약점(2026-10-13 기준) · 시험 2026-10-25</p>
+</div>
+
+<script>
+const ICONS={
+ factory:'<path d="M3 21V10l6 4V10l6 4V6h6v15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 17h2M12 17h2M17 17h2" stroke="currentColor" stroke-width="2"/>',
+ stairs:'<path d="M3 5h5v5h5v5h5v5h3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>',
+ pin:'<circle cx="6" cy="18" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="6" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.5 18H14a3 3 0 0 0 0-6h-4a3 3 0 0 1 0-6h5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3 2"/>',
+ shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 8v8M8.5 12h7" stroke="currentColor" stroke-width="2"/>',
+ cycle:'<path d="M20 12a8 8 0 1 1-2.3-5.6" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M18 2v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>',
+ toolbox:'<rect x="3" y="8" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 8V5h6v3M3 13h18" fill="none" stroke="currentColor" stroke-width="2"/>'
+};
+const ic=(n)=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
+document.querySelectorAll('svg[data-icon]').forEach(s=>{s.setAttribute('viewBox','0 0 24 24');s.setAttribute('aria-hidden','true');s.innerHTML=ICONS[s.dataset.icon];});
+const S=(w)=>w?' <span class="star">★</span>':'';
+const N=(n)=>` <span class="n">${n}</span>`;
+
+const WORLD=[
+ ['sw','SW공학','공장 라인','만드는 과정',86,'factory'],
+ ['db','DB','계단','설계해서 운영하기까지',73,'stairs'],
+ ['net','네트워크','지하철 노선','패킷 하나의 여정',36,'pin'],
+ ['sec','보안','성','공격자 vs 방어자',39,'shield'],
+ ['os','OS','생애 순환','프로세스 하나의 생애',15,'cycle'],
+ ['pg','프로그래밍','공구함','원리별 공구 6개',125,'toolbox']];
+document.getElementById('world').innerHTML=WORLD.map(([id,t,shape,st,n,i])=>
+ `<a class="tile" href="#${id}" style="--c:var(--${id})">${ic(i)}<div style="min-width:0;flex:1"><b class="c">${t}</b><span class="c">${shape} · ${st}</span><div class="meter" aria-label="기출 ${n}문항"><i style="width:${n/125*100}%"></i></div><span class="n">${n}문항</span></div></a>`).join('');
+
+const SW=[
+ ['정하기','요구사항·방법론',5,0,'기능/비기능 요구사항 · 애자일(XP·스크럼) · 비용산정(LOC·COCOMO·FP) · 럼바우(객체→동적→기능)','무엇을 정했으니 나눠 그린다'],
+ ['설계','UML',6,1,'구조: 클래스·객체·컴포넌트·배치·패키지 / 행위: 유스케이스·시퀀스·커뮤니케이션·상태·활동 / 관계: 연관·집합·합성·일반화·의존·실현','그린 모듈이 좋은지 잰다'],
+ ['설계','결합도·응집도',9,1,'결합도 약→강: 자료·스탬프·제어·외부·공통·내용 ("상대를 얼마나 침범하나") / 응집도 강→약: 기능·순차·교환·절차·시간·논리·우연 / 팬인·팬아웃 · SOLID','자주 겪는 문제의 정답 모음'],
+ ['설계','디자인패턴',12,1,'생성(만들 때): Singleton·Factory Method·Abstract Factory·Builder·Prototype / 구조(짜 맞출 때): Adapter·Bridge·Composite·Decorator·Facade·Flyweight·Proxy / 행위(대화할 때): Observer·Strategy·Iterator·Template Method·State·Command·Mediator·Memento·Visitor 등','안쪽 끝, 이제 사용자 접점'],
+ ['설계','UI',5,0,'설계 원칙: 직관성·유효성·학습성·유연성 / UI·UX','설계대로 짠다'],
+ ['구현','코딩·형상관리',7,0,'코딩규칙 · 리팩토링 · 형상관리(식별→통제→감사→기록) · 정적/동적 분석','짠 코드를 시험한다'],
+ ['테스트','테스트',30,1,'원리(살충제 패러독스) → 단계(V모델: 단위·통합·시스템·인수, 알파/베타) → 통합(하향=스텁, 상향=드라이버) → 블랙박스(동치분할·경계값·원인-결과) / 화이트박스 커버리지(구문→결정→조건→조건/결정→MC/DC→다중조건)','통과했으니 다른 시스템과 붙인다'],
+ ['통합·배포','연계',11,0,'EAI(Point-to-Point·Hub&Spoke·Message Bus·Hybrid) · 웹서비스(SOAP·WSDL·UDDI) · XML·JSON·AJAX · 릴리스노트','']];
+const box=(r,i)=>`<li class="station"><div class="box"><div class="no">${String(i+1).padStart(2,'0')} <span class="grp">${r[0]}</span></div><div class="nt c">${r[1]}${S(r[3])}${N(r[2])}</div><div class="k c">${r[4]}</div></div></li>`;
+const arr=(t)=>t?`<li class="arrow" aria-hidden="false"><span class="why c">${t}</span></li>`:'';
+let b='';SW.forEach((r,i)=>{
+  if(i===1) b+='<li style="display:flex" class="design"><ol style="display:flex;padding:0;list-style:none;margin:0">';
+  b+=box(r,i)+arr(r[5]);
+  if(i===4) b+='</ol></li>';
+});
+document.getElementById('belt').innerHTML=b;
+
+const DB=[
+ ['설계 흐름','모델링·스키마',7,0,'요구분석 → 개념(ER) → 논리(테이블로) → 물리(인덱스·저장) / 스키마 3단계: 외부·개념·내부','설계의 결과물이 표(릴레이션)다'],
+ ['모양','릴레이션 구조',6,1,'스키마(틀) vs 인스턴스(값) · 튜플=행 · 속성=열 · <b>차수=속성 수</b> · <b>카디널리티=튜플 수</b> · 도메인=값의 범위','표가 생겼으니 행을 구별할 규칙이 필요하다'],
+ ['규칙','키·무결성',7,1,'키: 슈퍼 ⊃ 후보 → 기본·대체 / 외래 · 무결성: <b>개체</b>(기본키 NULL·중복 불가) · <b>참조</b>(외래키 = 참조 표 기본키 값 또는 NULL) · <b>도메인</b>(범위 안의 값만)','규칙이 있어도 중복이 남으면 이상현상'],
+ ['다듬기','이상현상·정규화',9,0,'삽입·삭제·갱신 이상 → 1NF 원자값 → 2NF 부분종속 제거 → 3NF 이행종속 제거 → BCNF 결정자=후보키 → 4NF 다치 → 5NF 조인 ("원부이결다조") / 성능 때문에 되돌리면 반정규화','정리된 표에 질문을 던진다'],
+ ['묻기 ①','관계대수',8,1,'<b>σ</b> 행 고르기 · <b>π</b> 열 고르기 · ⋈ 조인 · <b>÷</b> "모두 가진 것" / ∪ ∩ − ×(카티션 곱)','사람 말로 옮기면 SQL'],
+ ['묻기 ②','SQL',30,1,'DDL·DML·DCL·TCL / 실행 순서 FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY / 집계함수는 NULL 제외, COUNT(*)는 행 수 / JOIN·서브쿼리·UNION','여럿이 동시에 쓰면 지켜야 한다'],
+ ['지키기','트랜잭션·회복',11,0,'ACID → 병행제어(로킹·2PL·타임스탬프) → 회복(REDO/UNDO·체크포인트·그림자 페이징) / 인덱스·해시','']];
+document.getElementById('stairs').innerHTML=DB.map((r,i)=>
+ `<div class="step" style="--i:${i}"><span class="lv">${i}</span><span class="nt c">${r[0]} · ${r[1]}${S(r[3])}${N(r[2])}</span><div class="k c">${r[4]}</div></div>`+
+ (r[5]?`<div class="riser" style="--i:${i}"><span class="why c">↓ ${r[5]}</span></div>`:'')).join('');
+
+const NET=[
+ ['출발 · 층 구조','OSI',4,0,'물리 · 데이터링크 · 네트워크 · 전송 · 세션 · 표현 · 응용 / 프로토콜 3요소: 구문·의미·타이밍','보내려면 주소부터 붙인다'],
+ ['주소 붙이기','서브넷·IP·NAT',9,1,'클래스 → 마스크로 네트워크/호스트 자르기 (/26 = 블록 64, 호스트 62) → NAT(사설↔공인) → IPv6(128비트, 16진 8그룹)','주소(IP)는 아는데 옆 장비의 MAC을 모른다'],
+ ['상대 찾기','ARP / RARP',2,1,'<b>ARP: IP → MAC</b> · RARP: MAC → IP','상대는 찾았고, 멀면 경로가 필요하다'],
+ ['길 찾기','라우팅',5,0,'RIP: 거리 벡터·홉 수(최대 15) · OSPF: 링크 상태·다익스트라 · BGP: AS 사이','가는 도중 깨지면 안 된다'],
+ ['안전 배달','오류검출·교환',8,1,'패리티(검출만) → CRC(생성 다항식, 연속 오류) → <b>해밍(정정까지)</b> / 패킷교환: 가상회선 · 데이터그램 / HDLC','그래도 문제가 생기면 알린다'],
+ ['종착 · 보고·응용','ICMP·HTTP',3,0,'ICMP(ping, 오류 보고) · HTTP · URL 구조','']];
+document.getElementById('metro').innerHTML=NET.map(r=>
+ `<div class="stop"><span class="nt c">${r[0]} · ${r[1]}${S(r[3])}${N(r[2])}</span><div class="k c">${r[4]}</div></div>`+
+ (r[5]?`<div class="hop"><span class="why c">↓ ${r[5]}</span></div>`:'')).join('');
+
+const OS=[
+ ['CPU 배정 · 스케줄링',5,1,'비선점: FCFS · SJF · HRN = (대기 + 서비스) ÷ 서비스 / 선점: RR(타임 슬라이스) · SRT(남은 시간 최소)'],
+ ['메모리 · 페이지 교체',2,0,'FIFO · LRU(가장 오래 안 쓴) · LFU(가장 적게 쓴) · OPT'],
+ ['대화·저장 · IPC·RAID',2,0,'IPC: 파이프·메시지 큐·공유 메모리·소켓 / RAID 0 스트라이핑 · 1 미러링 · 5 패리티 분산'],
+ ['명령 · 리눅스',4,0,'chmod 숫자: r=4 · w=2 · x=1 (소유자·그룹·기타)']];
+document.getElementById('oslist').innerHTML=OS.map(r=>`<div class="it"><span class="nt c">${r[0]}${S(r[2])}${N(r[1])}</span><div class="k c">${r[3]}</div></div>`).join('');
+
+const PG=[
+ ['흐름','반복·조건·배열 (최다)',0,['반복 변수 표를 그려 한 줄씩 추적','경계 확인: < 인가 <= 인가']],
+ ['메모리 (C)','포인터 15 · 문자열 12 · 구조체 10 · 2차원배열 · 연결리스트',1,['주소 칸과 값 칸을 나눠 그린다','p+1 = 자료형 크기만큼 이동','p->x = (*p).x']],
+ ['비트','비트연산 4',1,['2진수로 펼쳐 쓴다','& | ^ ~ << >>','연산자 우선순위 확인']],
+ ['자기 호출','재귀 6',1,['호출 트리를 그린다','반환값은 아래에서 위로 채운다']],
+ ['객체 규칙 (Java)','생성자 순서 · 상속 12 · static · 참조전달',1,['부모 생성자부터 실행','메서드 = 실제 객체 기준','필드·static = 선언 타입 기준','참조는 주소 복사']],
+ ['자료형 (Python)','리스트 · set · dict · 문자열',0,['슬라이싱 [a:b:c]','set: 중복 제거, 순서 없음','dict: {키: 값}']]];
+document.getElementById('tools').innerHTML=PG.map(r=>`<div class="tool"><span class="nt c">${r[0]}${S(r[2])}</span><div class="n c">${r[1]}</div><ul class="k c">${r[3].map(x=>`<li>${x}</li>`).join('')}</ul></div>`).join('');
+
+// 가리기 모드
+document.querySelectorAll('.c').forEach(el=>{el.tabIndex=-1;el.addEventListener('click',e=>{if(document.body.className){e.preventDefault();e.stopPropagation();el.classList.toggle('open');}});});
+function setMode(m){
+  document.body.className=m==='0'?'':'m'+m;
+  document.querySelectorAll('.open').forEach(x=>x.classList.remove('open'));
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===m));
+  document.querySelectorAll('.c').forEach(el=>el.tabIndex=m==='0'?-1:0);
+  document.querySelectorAll('.svgk').forEach(g=>g.style.opacity=m==='0'?1:0);
+  try{localStorage.setItem('mapMode',m)}catch(e){}
+}
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.m)));
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('c')&&document.body.className){e.preventDefault();e.target.classList.toggle('open');}});
+let saved='0';try{saved=localStorage.getItem('mapMode')||'0'}catch(e){}
+setMode(saved);
+
+if('serviceWorker' in navigator && location.protocol !== 'file:'){
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+</script>
+</body>
+</html>
