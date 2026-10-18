@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap" />
-<link rel="stylesheet" href="styles.css?v=20261019a" />
+<link rel="stylesheet" href="styles.css?v=20261019b" />
 </head>
 <body>
 <nav class="appnav" aria-label="화면">
@@ -31,6 +31,18 @@
   <div class="wlead" id="w-lead"></div>
   <main id="w-body"></main>
 </div>
-<script src="weak.js?v=20261019a"></script>
+
+<button type="button" class="mapfab" id="mapfab" hidden aria-haspopup="dialog">
+  <span class="mapfab-k">지도 펼치기</span><span class="mapfab-w" id="mapfab-where"></span>
+</button>
+<dialog class="mapdlg" id="mapdlg" aria-labelledby="mapdlg-where">
+  <div class="mapdlg-h">
+    <div class="mapdlg-t"><span class="mapfab-k">지금 공부 중</span><b id="mapdlg-where"></b></div>
+    <a id="mapdlg-full" href="map.html">지도 전체 ›</a>
+    <button type="button" id="mapdlg-x" aria-label="닫기">닫기</button>
+  </div>
+  <iframe id="mapdlg-f" title="현재 단원 지도" src="about:blank"></iframe>
+</dialog>
+<script src="weak.js?v=20261019b"></script>
 </body>
 </html>

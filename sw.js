@@ -1,8 +1,8 @@
-const CACHE_VERSION = 'eipsc-v2';
+const CACHE_VERSION = 'eipsc-v3';
 const PRECACHE = [
   './', 'index.html', 'manifest.json',
-  'styles.css?v=20261019a', 'app.js?v=20261019a',
-  'map.html', 'weak.html', 'weak.js?v=20261019a',
+  'styles.css?v=20261019b', 'app.js?v=20261019a',
+  'map.html', 'weak.html', 'weak.js?v=20261019b',
   'data/cards.json', 'data/weak.md',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png',
 ];
