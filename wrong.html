@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>정처기 오답노트</title>
+<meta name="description" content="기출 PDF에서 틀리거나 찍어 맞힌 문제를 단원별로 다시 풀어 보는 오답노트" />
+<meta name="theme-color" content="#eef1f4" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#12161c" media="(prefers-color-scheme: dark)" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="정처기 카드" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap" />
+<link rel="stylesheet" href="styles.css?v=20261020a" />
+</head>
+<body>
+<nav class="appnav" aria-label="화면">
+  <a href="./">카드</a><a href="map.html">지도</a><a href="weak.html">약점 요약</a><a href="wrong.html" aria-current="page">오답노트</a>
+</nav>
+<div class="wrap wide">
+  <header class="top">
+    <h1>오답노트</h1>
+    <span class="today" id="o-sum"></span>
+  </header>
+  <p class="wlead">기출 PDF에서 틀렸거나(✕) 찍어서 맞힌(△) 문제예요. 문제를 먼저 풀고 <b>정답 보기</b>를 누른 뒤 <b>맞힘 / 또 틀림</b>을 기록하세요. 글씨가 작으면 그림을 눌러 크게 보세요. 연속 2번 맞히면 <b>졸업</b>입니다.</p>
+  <nav class="chips" id="o-chips" aria-label="단원"></nav>
+  <div class="opts">
+    <label><input type="checkbox" id="o-hide" /> 졸업한 문제 숨기기</label>
+    <label><input type="checkbox" id="o-unsure" checked /> △(찍어 맞힘)도 보기</label>
+  </div>
+  <div class="status" id="o-status">문제를 불러오는 중…</div>
+  <main id="o-body"></main>
+  <details class="tools">
+    <summary>오프라인 · 기록</summary>
+    <p>지하철처럼 인터넷이 약한 곳에서 풀려면 문제 그림을 미리 받아 두세요(약 2.5MB).</p>
+    <div class="tool-row"><button type="button" id="o-pre">문제 그림 모두 받아 두기</button><button type="button" class="danger" id="o-reset">오답노트 기록 지우기</button></div>
+    <p class="tool-msg" id="o-msg"></p>
+    <p>문제·정답 그림 출처: Life-Journey 블로그 정보처리기사 실기 복원 문제(CC BY 4.0), 개인 학습용 복원 문제집에서 잘라 옴.</p>
+  </details>
+</div>
+<dialog class="zoomdlg" id="zoomdlg" aria-label="그림 크게 보기">
+  <div class="zoom-h"><span>두 손가락으로 확대 · 옆으로 밀어 보기</span><button type="button" id="zoom-x">닫기</button></div>
+  <div class="zoom-b"><img id="zoom-img" alt="" /></div>
+</dialog>
+<script src="wrong.js?v=20261020a"></script>
+</body>
+</html>

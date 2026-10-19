@@ -7,6 +7,7 @@
 | 카드 | `index.html` · `app.js` | `data/cards.json` |
 | 지도 | `map.html` (스크립트 포함) | 파일 안 배열(WORLD·SW·DB·NET·OS·PG) |
 | 약점 요약 | `weak.html` · `weak.js` | `data/weak.md` |
+| 오답노트 | `wrong.html` · `wrong.js` | `data/wrong.json` · `img/wrong/` |
 
 지도와 약점 요약은 서로 링크된다: 지도 단원 제목 옆 [약점 요약 ›], 요약 단원 제목 옆 [지도에서 보기 ›].
 
@@ -38,6 +39,10 @@ python3 tools/build_cards.py <export-dir>
 
 ## 약점 요약 갱신
 `data/weak.md`를 고친다. `## <id> 제목`의 첫 단어(net·sec·db·sw·os·pg·gap)가 섹션 id이자 지도 앵커다. `###` 소단원은 접고 펼칠 수 있다. 지원 문법: 제목·문단·목록(4칸 들여쓰기 하위)·표·코드 블록·`**굵게**`·`` `코드` ``. 원본 문서: Claude 문서 「정처기 실기 약점 단원 정리 (핵심요약 발췌)」.
+
+## 오답노트 갱신
+기출 PDF에서 틀린(✕)·찍어 맞힌(△) 문제를 단원별로 다시 푸는 화면. 문제 그림 → [정답 보기] → 정답·해설 그림과 그때 내 답·메모 → [맞힘]/[또 틀림]. 연속 2번 맞히면 졸업. 기록은 폰 브라우저(localStorage)에만 있다.
+새 회차를 풀고 세션 로그를 남겼으면 `tools/build_wrong.py`의 `SESSION_EXAM`에 세션 파일을 추가하고 `python3 tools/build_wrong.py <01_정보처리기사 폴더>`로 `data/wrong.json`과 `img/wrong/`을 다시 만든다. 그림은 회차 PDF를 주석 숨김으로 렌더링해 초록 번호 상자 기준으로 자른다(손글씨 없음).
 
 ## 정적 파일을 바꿀 때
 `sw.js`의 `CACHE_VERSION`과 `index.html`·`sw.js`의 `?v=` 값을 함께 올린다.

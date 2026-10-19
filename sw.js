@@ -1,8 +1,9 @@
-const CACHE_VERSION = 'eipsc-v3';
+const CACHE_VERSION = 'eipsc-v4';
 const PRECACHE = [
   './', 'index.html', 'manifest.json',
-  'styles.css?v=20261019b', 'app.js?v=20261019a',
+  'styles.css?v=20261020a', 'app.js?v=20261019a',
   'map.html', 'weak.html', 'weak.js?v=20261019b',
+  'wrong.html', 'wrong.js?v=20261020a', 'data/wrong.json',
   'data/cards.json', 'data/weak.md',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png',
 ];
@@ -45,7 +46,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(fetch(request).catch(() => caches.match(request, { ignoreSearch: true }).then((r) => r || caches.match('./'))));
     return;
   }
-  if (url.origin === self.location.origin && (url.pathname.endsWith('/data/cards.json') || url.pathname.endsWith('/data/weak.md'))) {
+  if (url.origin === self.location.origin && (url.pathname.endsWith('/data/cards.json') || url.pathname.endsWith('/data/weak.md') || url.pathname.endsWith('/data/wrong.json'))) {
     event.respondWith(networkFirst(request));
     return;
   }

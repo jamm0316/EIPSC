@@ -131,8 +131,8 @@ body.m1 .k.c:not(.open) *, body.m2 .c:not(.open) *{visibility:hidden}
 
 <style>
 body{margin:0}
-.appnav{position:sticky;top:0;z-index:8;display:flex;gap:4px;justify-content:center;padding:8px 16px;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line);font-family:var(--body)}
-.appnav a{flex:1;max-width:160px;text-align:center;font-size:14px;font-weight:700;text-decoration:none;color:var(--muted);border-radius:999px;padding:7px 10px}
+.appnav{position:sticky;top:0;z-index:8;display:flex;gap:4px;justify-content:center;padding:8px 10px;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line);font-family:var(--body)}
+.appnav a{flex:1;max-width:160px;text-align:center;font-size:13.5px;font-weight:700;text-decoration:none;color:var(--muted);border-radius:999px;padding:7px 6px;white-space:nowrap}
 .appnav a[aria-current="page"]{background:var(--ink);color:var(--bg)}
 .appnav a:focus-visible{outline:2px solid var(--sw);outline-offset:2px}
 .bar{top:52px !important}
@@ -152,7 +152,7 @@ body{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset
 </head>
 <body>
 <nav class="appnav" aria-label="화면">
-  <a href="./">카드</a><a href="map.html" aria-current="page">지도</a><a href="weak.html">약점 요약</a>
+  <a href="./">카드</a><a href="map.html" aria-current="page">지도</a><a href="weak.html">약점 요약</a><a href="wrong.html">오답노트</a>
 </nav>
 <div class="wrap">
   <h1>정처기 실기 지도</h1>
